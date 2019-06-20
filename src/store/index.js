@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import firebase from 'firebase'
 
 Vue.use(Vuex)
 
@@ -11,7 +12,7 @@ export const store = new Vuex.Store({
         id: 'asdnjkasdhjkkk', 
         title: 'Meetup in New York',
         location: 'New York',
-        date: '2019-06-12',
+        date: new Date(),
         description: 'Labore voluptate sit reprehenderit minim mollit dolore in officia voluptate cillum. Incididunt ea reprehenderit do pariatur ut duis. Aute cupidatat ex et laboris qui. Incididunt laborum eu deserunt ipsum commodo deserunt adipisicing magna. Nisi do ea qui Lorem minim cillum.'
       },
       { 
@@ -19,7 +20,7 @@ export const store = new Vuex.Store({
         id: 'sdfsddfsdfsdsd', 
         title: 'Meetup in Paris',
         location: 'Paris',
-        date: '2019-06-13',
+        date: new Date(),
         description: 'Do tempor eiusmod ea laboris elit reprehenderit ea esse aliquip incididunt. Nostrud ut cupidatat culpa enim dolore aliqua in dolor esse. Cillum magna deserunt nisi aute.'
       }
     ],
@@ -31,6 +32,9 @@ export const store = new Vuex.Store({
   mutations: {
     createMeetup (state, payload) {
       state.loadedMeetups.push(payload)
+    },
+    setUser (state, payload) {
+      state.user = payload
     }
   },
   actions: {
@@ -44,7 +48,24 @@ export const store = new Vuex.Store({
         id: 'hklnasdknasikasdj'
       }
       commit('createMeetup', meetup)
-    } 
+    },
+    userSignUp ({ commit }, payload ) {
+      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
+      .then(
+        user => {
+          const newUser = {
+            id: user.uid,
+            registeredMeetups: []
+          }
+          commit(setUser, newUser)
+        }
+      )
+      .catch(
+        error => {
+          console.log(error)
+        }
+      )
+    }
   },
   getters: {
     loadedMeetups (state) {

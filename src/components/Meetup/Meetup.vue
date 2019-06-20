@@ -13,7 +13,7 @@
             >
           </v-img>
           <v-card-text>
-            <div class="primary--text">{{ meetup.date }} | {{ meetup.location }}</div>
+            <div class="primary--text">{{ meetup.date | dateFormatter }} | {{ meetup.location }}</div>
             <div>
               {{ meetup.description }}
             </div>
@@ -34,7 +34,8 @@ export default {
   computed: {
     meetup () {
       return this.$store.getters.loadedMeetup(this.id)
-    }
+    },
+
   },
   methods: {
     
