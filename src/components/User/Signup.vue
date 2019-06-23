@@ -1,5 +1,10 @@
 <template>
   <v-container>
+    <v-layout row v-if="error">
+      <v-flex xs12 sm6 offset-sm3>
+        <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
+      </v-flex>
+    </v-layout>
     <v-layout row>
       <v-flex xs12 sm6 offset-sm3>
         <v-card>
@@ -74,11 +79,26 @@ export default {
     }
   },
   computed: {
-
+    user () {
+      return this.$store.getters.user
+    },
+    error () {
+      return this.$store.getters.error
+    }
+  },
+  watch: {
+    user ( value ) {
+      if ( value !== null && value !== undefined ) {
+        this.$router.push('/')
+      }
+    }
   },
   methods: {
     onSignUp () {
       this.$store.dispatch( 'userSignUp', { email: this.email, password: this.password } )
+    },
+    onDismissed () {
+      console.log('Dismissed alert!')
     }
   }
 }
